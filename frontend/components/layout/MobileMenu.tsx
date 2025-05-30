@@ -28,7 +28,7 @@ export default function MobileMenu({
           exit="closed"
           variants={sidebarVariants}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed inset-0 z-40 bg-white p-4 pt-16 md:hidden"
+          className="fixed inset-0 z-40 w-[70%] bg-white p-4 pt-16 md:hidden"
         >
           <nav className="flex flex-col space-y-4">
             {navItems.map((item) => (

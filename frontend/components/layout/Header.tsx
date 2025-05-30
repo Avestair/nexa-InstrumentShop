@@ -88,9 +88,9 @@ export default function Header() {
               animate={isMenuOpen ? "open" : "closed"}
               variants={{
                 open: { rotate: -45, y: -5 },
-                closed: { rotate: 0, y: 0 },
+                closed: { rotate: 0, y: 2 },
               }}
-              className="block h-0.5 w-6 bg-black"
+              className="relative bottom-[1.9px] block h-0.5 w-6 bg-black"
             ></motion.span>
           </button>
         </div>
