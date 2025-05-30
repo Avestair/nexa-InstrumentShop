@@ -112,25 +112,36 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+/* @theme {
+  --color-my-primary-red: #800020;
+  --color-my-primary-green: #224229;
+  --color-my-alternative-cream: #f5f5dc;
+  --color-my-alternative-gold: #b8860b;
+  --color-my-alternative-walnut: #b8860b;
+} */
+
+@theme {
+  --color-my-primary: #000;
+  --color-my-secondary: #fff;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  /* body {
-    @apply bg-background text-foreground;
-  } */
+  body {
+    @apply bg-white;
+  }
 }
-
 
 @layer utilities {
-.grid-cols-auto-fit {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
+  .grid-cols-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
 html {
-  background-image: url("/bg.png");
+  /* background-image: url("/bg.png");
   background-position: center;
-  background-size: cover;
+  background-size: cover; */
 }

@@ -3,7 +3,7 @@ import React, { JSX } from "react";
 type ButtonVariant = "default" | "outlined" | "danger" | "warning" | "success";
 
 const baseStyles =
-  "py-2 px-4 cursor-pointer outline-none font-semibold rounded-sm transition-colors duration-300 ease-in-out";
+  "py-2 px-4 cursor-pointer outline-none rounded-sm transition-colors duration-300 ease-in-out";
 
 type AsProp<C extends React.ElementType> = {
   as?: C;
