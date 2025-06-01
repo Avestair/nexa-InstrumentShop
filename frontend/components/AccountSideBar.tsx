@@ -39,21 +39,21 @@ export default function AccountSidebar({
   ];
 
   return (
-    <aside className="min-w-[260px] p-8">
+    <aside className="p-8 lg:min-w-[150px] xl:min-w-[260px]">
       <h2 className="mb-4 border-b border-gray-700 pb-4 text-xl font-medium">
         حساب کاربری
       </h2>
       <nav>
-        <ul>
+        <ul className="lg:grid lg:gap-4">
           {sections.map((section) => (
-            <li key={section.id} className="mb-4">
+            <li key={section.id}>
               <Button
                 variant="default"
                 className={`flex w-full gap-8 ${activeSection === section?.id ? "bg-black text-white" : "border-0 !bg-gray-50 !text-black"}`}
                 onClick={() => onSectionChange(section.id)}
               >
-                {section.icon}
-                {section.name}
+                <span className="hidden">{section.icon}</span>
+                <p className="text-sm xl:text-base">{section.name}</p>
               </Button>
             </li>
           ))}

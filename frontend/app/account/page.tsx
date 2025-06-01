@@ -29,7 +29,6 @@ const AccountPage: React.FC = () => {
     }
   };
 
-  // Define animation variants
   const contentVariants = {
     hidden: { opacity: 0, x: -50 }, // Starts off to the left and invisible
     visible: {
@@ -41,15 +40,15 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full justify-center">
-      <div className="mt-10 flex min-h-[70dvh] w-[90%] justify-between rounded-sm border border-gray-200 bg-gray-50 md:w-[80%] lg:w-[80%]">
+    <div className="flex justify-center">
+      <div className="mt-10 grid min-h-[70dvh] rounded-sm border border-gray-200 bg-gray-50 lg:flex lg:justify-between">
         <AccountSidebar
           activeSection={activeSection}
           onSectionChange={setActiveSection}
         />
 
         {/* Main Content */}
-        <main className="border-gray- mx-4 my-4 flex w-full justify-center rounded-sm bg-white p-4">
+        <main className="mx-4 my-4 flex justify-center rounded-sm bg-red-400 p-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
