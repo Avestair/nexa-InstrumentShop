@@ -3,24 +3,29 @@ import { PiX } from "react-icons/pi";
 
 interface ModalProps {
   mainContainerClassName?: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+interface ModalHeaderProps {
   title: string;
   description?: string;
-  body: React.ReactNode;
-  bodyContainerClassName?: string;
-  footer?: React.ReactNode;
-  footerContainerClassName?: string;
-  onClose: () => void;
+}
+
+interface ModalBodyProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+interface ModalFooterProps {
+  className?: string;
+  children: React.ReactNode;
 }
 
 export default function Modal({
   mainContainerClassName,
-  title,
-  description,
-  body,
-  bodyContainerClassName,
-  footer,
-  footerContainerClassName,
   onClose,
+  children,
 }: ModalProps) {
   return (
     <div
@@ -40,30 +45,37 @@ export default function Modal({
           <PiX className="size-6" />
         </button>
 
-        {/* Modal Header */}
-        <div className="grid gap-2 border-b pb-4">
-          <p className="text-2xl font-bold text-gray-800">{title}</p>
-          {description && (
-            <p className="text-sm text-gray-500">{description}</p>
-          )}
-        </div>
-
-        {/* Modal Body */}
-        <div
-          className={`grid max-h-[70vh] gap-3 overflow-y-auto ${bodyContainerClassName}`}
-        >
-          {body}
-        </div>
-
-        {/* Modal Footer */}
-        {footer && (
-          <div
-            className={`flex justify-end gap-3 border-t pt-4 ${footerContainerClassName}`}
-          >
-            {footer}
-          </div>
-        )}
+        {/* Render sub-components */}
+        {children}
       </div>
     </div>
   );
 }
+
+// Sub-component for Modal Header
+Modal.Header = function ModalHeader({ title, description }: ModalHeaderProps) {
+  return (
+    <div className="grid gap-2 border-b pb-4">
+      <p className="text-2xl font-bold text-gray-800">{title}</p>
+      {description && <p className="text-sm text-gray-500">{description}</p>}
+    </div>
+  );
+};
+
+// Sub-component for Modal Body
+Modal.Body = function ModalBody({ className, children }: ModalBodyProps) {
+  return (
+    <div className={`grid max-h-[70vh] gap-3 overflow-y-auto ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+// Sub-component for Modal Footer
+Modal.Footer = function ModalFooter({ className, children }: ModalFooterProps) {
+  return (
+    <div className={`flex justify-end gap-3 border-t pt-4 ${className}`}>
+      {children}
+    </div>
+  );
+};
