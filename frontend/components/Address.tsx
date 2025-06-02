@@ -5,10 +5,10 @@ import { Button } from "../ui/Button";
 export default function Addresses() {
   return (
     <section className="mb-8 rounded-lg bg-white p-4">
-      <h2 className="mb-6 border-b pb-4 text-right text-3xl font-semibold text-gray-800">
+      <h2 className="mb-6 border-b pb-4 text-3xl font-semibold text-gray-800">
         آدرس‌ها
       </h2>
-      <div className="space-y-6 text-right">
+      <div className="">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <AddressCard
             postalCode="۱۲۳۴۵-۶۷۸۹۰"

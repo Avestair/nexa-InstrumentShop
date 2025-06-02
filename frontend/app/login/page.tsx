@@ -4,11 +4,7 @@ import Link from "next/link";
 import { Button } from "../../ui/Button";
 import Input from "../../ui/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-type Inputs = {
-  phoneNumber: string;
-  password: string;
-};
+import { Inputs } from "../../types/FormTypes";
 
 export default function page() {
   const {

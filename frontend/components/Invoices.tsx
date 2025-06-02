@@ -61,7 +61,7 @@ export default function Invoices() {
       invoice.date,
       invoice.amount,
       <span
-        className={`rounded-full px-3 py-1 text-xs font-semibold ${invoice.status === "پرداخت شده" ? "bg-green-200 text-green-800" : ""} ${invoice.status === "پرداخت نشده" ? "bg-red-200 text-red-800" : ""} `}
+        className={`rounded-full px-3 py-1 text-xs font-semibold ${invoice.status === "پرداخت شده" ? "bg-green-300/40 text-green-600" : ""} ${invoice.status === "پرداخت نشده" ? "bg-red-300/40 text-red-600" : ""} `}
         key={`${invoice.id}-status`}
       >
         {invoice.status}
@@ -94,7 +94,7 @@ export default function Invoices() {
   });
 
   return (
-    <section className="mb-8 rounded-sm p-2">
+    <section className="mb-8 w-full rounded-sm p-2">
       <h2 className="mb-6 border-b pb-4 text-right text-3xl font-semibold text-gray-800">
         فاکتورها
       </h2>

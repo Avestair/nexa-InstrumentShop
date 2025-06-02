@@ -48,7 +48,7 @@ const AccountPage: React.FC = () => {
         />
 
         {/* Main Content */}
-        <main className="mx-4 my-4 flex justify-center rounded-sm bg-red-400 p-4">
+        <main className="mx-4 my-4 flex justify-center overflow-y-auto rounded-sm bg-white p-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
