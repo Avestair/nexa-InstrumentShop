@@ -9,8 +9,8 @@ services:
       - mongo
     environment:
       - NEXT_PUBLIC_APP_URL=http://localhost
-      - NEXT_PUBLIC_PORT=3000
-      - NEXT_PUBLIC_MONGO_URL=mongodb://mongo:27017/instrument-shop
+      - NEXT_PUBLIC_PORT=8000
+      - NEXT_PUBLIC_MONGO_URI=mongodb://mongo:27017/instrument-shop
       - NEXT_PUBLIC_NODE_ENV=development
     volumes:
       - ./backend:/code
