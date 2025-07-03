@@ -1,5 +1,10 @@
 const express = require('express');
 
+const connectionDB = require('./config/db');
+
+// Database connection
+connectionDB()
+
 const app = express();
 
 
@@ -16,6 +21,6 @@ app.get('/', (req, res) => {
 })
 
 
-app.listen(8000, () => {
+app.listen(process.env.NEXT_PUBLIC_PORT, () => {
   console.log('Server runing on port: 8000, http://localhost:8000');
 })
