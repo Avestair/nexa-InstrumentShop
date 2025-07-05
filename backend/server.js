@@ -1,6 +1,8 @@
 const express = require('express');
 
 const connectionDB = require('./config/db');
+const { notFound, errorHandler } = require('./middlewares/errors');
+const authRoutes = require('./routes/authRoutes');
 
 // Database connection
 connectionDB()
@@ -19,6 +21,11 @@ app.get('/', (req, res) => {
     message: 'Test server'
   });
 })
+app.use('/auth', authRoutes);
+
+// Error Handling
+app.use(notFound);
+app.use(errorHandler);
 
 
 app.listen(process.env.NEXT_PUBLIC_PORT, () => {

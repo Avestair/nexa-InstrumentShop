@@ -10,6 +10,7 @@ services:
     environment:
       - NEXT_PUBLIC_APP_URL=http://localhost
       - NEXT_PUBLIC_PORT=8000
+      - NEXT_PUBLIC_JWT_SECRET=alsh2348hgasf22jalsASDKHWHTEST00SECRETassjhbvna
       - NEXT_PUBLIC_MONGO_URI=mongodb://mongo:27017/instrument-shop
       - NEXT_PUBLIC_NODE_ENV=development
     volumes:
