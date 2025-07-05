@@ -24,7 +24,7 @@ export default function Home() {
       <ProductCard
         id={1}
         imageUrl="/productImage.jpg"
-        href={"/"}
+        href={"/products/a234ts"}
         title={"محصول تستی"}
         price={200000}
         ProductColors={colors}
