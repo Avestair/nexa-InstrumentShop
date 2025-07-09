@@ -1,20 +1,22 @@
 FROM node:22-alpine
 
+# Install pnpm globally
+RUN npm install -g pnpm
+
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /code
-COPY . /app
+# Copy package files first to leverage Docker cache
+COPY package.json pnpm-lock.yaml* ./
 
-# Install app dependencies
-COPY package*.json ./
-RUN npm install
+# Install dependencies using pnpm
+RUN pnpm install
 
-# Bundle app source
+# Copy the rest of the application files
 COPY . .
 
-# Make port 3000 available to the world outside this container
+# Make port 3000 available
 EXPOSE 3000
 
 # Define the command to run your app
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
