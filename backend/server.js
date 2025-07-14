@@ -3,6 +3,8 @@ const express = require('express');
 const connectionDB = require('./config/db');
 const { notFound, errorHandler } = require('./middlewares/errors');
 const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+const setupSwagger = require('./config/swagger');
 
 // Database connection
 connectionDB()
@@ -13,15 +15,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Swagger config
+setupSwagger(app);
+
 
 
 // Routes
-app.get('/', (req, res) => {
-  return res.status(200).json({
-    message: 'Test server'
-  });
-})
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
 
 // Error Handling
 app.use(notFound);
