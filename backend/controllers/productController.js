@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const fs = require('fs');
+const path = require('path');
 
 // @desc Get all products
 // @route GET /api/products
@@ -36,7 +38,15 @@ exports.getProductById = async (req, res, next) => {
 // @route POST /api/products
 exports.createProduct = async (req, res, next) => {
   try {
-    const {name, description, price, category, brand, stock, images } = req.body;
+    const {name, description, price, category, brand, stock} = req.body;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        message: 'Please upload at least one image.'
+      });
+    }
+
+    const images = req.files.map(file => `/uploads/${file.filename}`);
     const newProduct = Product.create({
       name,
       description,
@@ -59,21 +69,60 @@ exports.createProduct = async (req, res, next) => {
 // @route PUT /api/products/:id
 exports.updateProduct = async (req, res, next) => {
   try {
-    const updateProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
 
-    if (!updateProduct) {
+    const { imagesToDelete } = req.body; // ['/uploads/123.jpg', '/uploads/456.jpg']
+    console.log(imagesToDelete);
+    let imagesToDeleteArr = [];
+    
+    if (imagesToDelete && typeof imagesToDelete === 'string') {
+      try {
+        const nestedArr = JSON.parse(`[${imagesToDelete}]`);
+        imagesToDeleteArr = nestedArr.flat();
+      } catch (e) {
+        return res.status(400).json({
+          message: e.message
+        });
+      }
+    } else if (Array.isArray(imagesToDelete)) {
+      imagesToDeleteArr = imagesToDelete;
+    }
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
       return res.status(404).json({
         message: 'Product not found'
       });
     }
 
+    let currentImages = product.images;
+
+    if (imagesToDeleteArr.length > 0) {
+      imagesToDeleteArr.forEach(imageUrl => {
+        const imagePath = path.join(process.cwd(), 'public', imageUrl)
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath)
+        }
+      });
+
+      currentImages = currentImages.filter(img => !imagesToDeleteArr.includes(img))
+    }
+
+    if (req.files && req.files.length > 0) {
+      const newImages = req.files.map(file => `/uploads/${file.filename}`);
+      currentImages.push(...newImages);
+    }
+
+    req.body.images = currentImages;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
     res.status(200).json({
       message: 'Product updated successfully',
-      data: updateProduct
+      data: updatedProduct
     });
   } catch (error) {
     next(error);
@@ -84,13 +133,24 @@ exports.updateProduct = async (req, res, next) => {
 // @route DELETE /api/products/:id
 exports.deleteProduct = async (req, res, next) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({
         message: 'Product not found'
       });
     }
+
+    if (product.images && product.images.length > 0) {
+      product.images.forEach(imageUrl => {
+        const imagePath = path.join(process.cwd(), 'public', imageUrl);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      })
+    }
+
+    await Product.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       message: 'Product deleted successfully'

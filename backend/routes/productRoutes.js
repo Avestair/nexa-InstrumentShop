@@ -3,6 +3,7 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 
 const { authMiddleware } = require('../middlewares/auth');
+const { upload } = require('../utils/multer');
 
 // Public routes
 
@@ -18,11 +19,21 @@ router.get('/:id', productController.getProductById);
 
 // @desc Create a new product (Admin only)
 // @route POST /api/products
-router.post('/', authMiddleware, productController.createProduct);
+router.post(
+  '/', 
+  authMiddleware,
+  upload.array('productImages', 4),
+  productController.createProduct
+);
 
 // @desc Update a product (Admin only)
 // @route PUT /api/products/:id
-router.put('/:id',authMiddleware, productController.updateProduct);
+router.put(
+  '/:id',
+  authMiddleware, 
+  upload.array('productImages', 4),
+  productController.updateProduct
+);
 
 // @desc Delete a product (Admin only)
 // @route DELETE /api/products/:id
