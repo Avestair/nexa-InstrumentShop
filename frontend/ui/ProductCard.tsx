@@ -3,15 +3,16 @@
 import Link from "next/link";
 import {
   PiArrowLeft,
-  PiMinus,
-  PiPlusBold,
-  PiShoppingCartDuotone,
-  PiTrashDuotone,
+  PiCheck,
+  // PiMinus,
+  // PiPlusBold,
+  // PiTrashDuotone,
 } from "react-icons/pi";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/styles.min.css";
-import { Button } from "../ui/Button";
+// import { Button } from "../ui/Button";
 import { useCartStore } from "../stores/CartStore";
+import { usePrefetchOnHover } from "../hooks/usePrefetchHook";
 
 interface ProductColor {
   productColor: string;
@@ -20,6 +21,7 @@ interface ProductCardProps {
   id: number;
   title: string;
   price: number;
+  discount?: number;
   href: string;
   className?: string;
   imageUrl: string;
@@ -30,41 +32,49 @@ export default function ProductCard({
   id,
   title,
   price,
+  discount,
   href,
   className,
   imageUrl,
   ProductColors,
 }: ProductCardProps) {
-  const { items, addToCart, updateQuantity, removeFromCart } = useCartStore();
+  const { items } = useCartStore();
+  const { handleMouseEnter, handleMouseLeave } = usePrefetchOnHover(href, 5000);
 
   const cartItem = items.find((item) => item.id === id);
   const isInCart = !!cartItem;
   const currentQuantity = cartItem ? cartItem.quantity : 0;
 
-  const handleAddToCart = () => {
-    addToCart({ id, name: title, price, imageUrl });
-  };
+  // const handleAddToCart = () => {
+  //   addToCart({ id, name: title, price, imageUrl });
+  // };
 
-  const handleIncreaseQuantity = () => {
-    updateQuantity(id, currentQuantity + 1);
-  };
+  // const handleIncreaseQuantity = () => {
+  //   updateQuantity(id, currentQuantity + 1);
+  // };
 
-  const handleDecreaseQuantity = () => {
-    updateQuantity(id, currentQuantity - 1);
-  };
+  // const handleDecreaseQuantity = () => {
+  //   updateQuantity(id, currentQuantity - 1);
+  // };
 
-  const handleDeletingItem = () => {
-    removeFromCart(id);
-  };
+  // const handleDeletingItem = () => {
+  //   removeFromCart(id);
+  // };
 
   return (
     <div
-      className={`grid justify-items-center gap-8 rounded-3xl bg-white p-4 ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleMouseEnter}
+      onTouchEnd={handleMouseLeave}
+      className={`grid justify-items-center gap-4 rounded-3xl border bg-white p-4 ${className}`}
     >
       <div className="relative">
-        <span className="absolute z-10 rounded-md bg-red-700/80 p-2 text-sm text-white">
-          <p>40%</p>
-        </span>
+        {discount && (
+          <span className="absolute z-10 rounded-md bg-red-700/80 p-2 text-sm text-white">
+            <p>%{discount}</p>
+          </span>
+        )}
         <Link href={href} aria-label={`View details for ${title}`}>
           <InnerImageZoom
             src={imageUrl}
@@ -75,14 +85,14 @@ export default function ProductCard({
           />
         </Link>
       </div>
-      <div className="grid gap-3">
+      <div className="mt-1 grid gap-3">
         <Link href={href}>
-          <h2 className="text-lg font-semibold">{title}</h2>
+          <h2 className="text-center font-semibold md:text-lg">{title}</h2>
         </Link>
-        <div className="flex">
-          <p className="text-xl font-semibold">${price.toLocaleString()}</p>
+        <div className="flex justify-center gap-3">
+          <p className="font-semibold md:text-xl">{price.toLocaleString()}</p>
           <svg
-            className="ms-3 size-6"
+            className="ms-3 mt-0.5 size-6"
             width="25"
             height="25"
             viewBox="0 0 14 16"
@@ -101,13 +111,13 @@ export default function ProductCard({
         </div>
 
         {/* colors */}
-        <div className="flex gap-5">
-          <p>رنگ بندی</p>
+        <div className="mt-2 flex flex-wrap justify-center gap-3">
+          <p className="text-sm md:text-base">رنگ بندی</p>
           <div className="mt-2 flex gap-1.5">
             {ProductColors.map((colorObj, index) => (
               <span
                 key={index}
-                className="size-3 rounded-full"
+                className="size-2 rounded-full md:size-3"
                 style={{ backgroundColor: colorObj.productColor }}
               ></span>
             ))}
@@ -116,37 +126,41 @@ export default function ProductCard({
       </div>
       <div className="flex w-full gap-4">
         {isInCart ? (
-          <div className="mt-2 flex w-full justify-between">
-            <Button
-              variant="danger"
-              onClick={handleDeletingItem}
-              aria-label={`Remove ${title} from cart`}
-            >
-              <PiTrashDuotone className="size-5" />
-            </Button>
-            <div className="flex h-fit items-center justify-between rounded-sm bg-black px-2 text-white">
-              <button
-                onClick={handleDecreaseQuantity}
-                className="cursor-pointer px-4 py-3 text-white"
-                aria-label={`Decrease quantity of ${title}`}
-              >
-                <PiMinus className="size-5" />
-              </button>
-              <p className="text-md font-semibold" aria-live="polite">
-                {currentQuantity}
-              </p>
-              <button
-                onClick={handleIncreaseQuantity}
-                className="cursor-pointer px-4 py-3 text-white"
-                aria-label={`Increase quantity of ${title}`}
-              >
-                <PiPlusBold className="size-4" />
-              </button>
-            </div>
-          </div>
+          <span className="flex w-full gap-2 border-b border-green-700 text-sm">
+            <PiCheck className="size-4" />
+            <p>در سبد خرید موجود است {currentQuantity}</p>
+          </span>
         ) : (
-          <div className="mt-2 flex w-full flex-col justify-between gap-4">
-            <Button
+          // <div className="mt-2 flex w-full justify-between">
+          //   <Button
+          //     variant="danger"
+          //     onClick={handleDeletingItem}
+          //     aria-label={`Remove ${title} from cart`}
+          //   >
+          //     <PiTrashDuotone className="size-5" />
+          //   </Button>
+          //   <div className="flex h-fit items-center justify-between rounded-sm bg-black px-2 text-white">
+          //     <button
+          //       onClick={handleDecreaseQuantity}
+          //       className="cursor-pointer px-4 py-3 text-white"
+          //       aria-label={`Decrease quantity of ${title}`}
+          //     >
+          //       <PiMinus className="size-5" />
+          //     </button>
+          //     <p className="text-md font-semibold" aria-live="polite">
+          //       {currentQuantity}
+          //     </p>
+          //     <button
+          //       onClick={handleIncreaseQuantity}
+          //       className="cursor-pointer px-4 py-3 text-white"
+          //       aria-label={`Increase quantity of ${title}`}
+          //     >
+          //       <PiPlusBold className="size-4" />
+          //     </button>
+          //   </div>
+          // </div>
+          <div className="mt-2 flex w-full justify-center">
+            {/* <Button
               variant="default"
               onClick={handleAddToCart}
               className="flex w-full justify-center gap-2"
@@ -154,17 +168,15 @@ export default function ProductCard({
             >
               <PiShoppingCartDuotone className="size-6" />
               <p className="font-normal">خرید</p>
-            </Button>
-            <Button
-              variant="default"
-              as={Link}
+            </Button> */}
+            <Link
               href={href}
-              className="flex w-full justify-center gap-2.5"
+              className="border-my-primary flex w-fit justify-center gap-2.5 border-b text-sm md:gap-5 md:text-base"
               aria-label={`More information about ${title}`}
             >
-              <PiArrowLeft className="size-6 rotate-180" />
-              <p className="font-normal">اطلاعات بیشتر</p>
-            </Button>
+              <p>اطلاعات بیشتر</p>
+              <PiArrowLeft className="mt-0.5 size-5 md:size-6" />
+            </Link>
           </div>
         )}
       </div>
