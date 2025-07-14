@@ -5,6 +5,7 @@ const { notFound, errorHandler } = require('./middlewares/errors');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const setupSwagger = require('./config/swagger');
+const path = require('path');
 
 // Database connection
 connectionDB()
@@ -14,6 +15,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Swagger config
 setupSwagger(app);
