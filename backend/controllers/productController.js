@@ -38,7 +38,22 @@ exports.getProductById = async (req, res, next) => {
 // @route POST /api/products
 exports.createProduct = async (req, res, next) => {
   try {
-    const {name, description, price, category, brand, stock} = req.body;
+    const {name, description, category, brand, variants} = req.body;
+
+    let parsedVariants;
+    try {
+      parsedVariants = JSON.parse(variants);
+    } catch (e) {
+      return res.status(400).json({
+        message: 'Invalid variants JSON format'
+      });
+    }
+
+    if (!Array.isArray(parsedVariants) || parsedVariants.length === 0) {
+      return res.status(400).json({
+        message: 'At least one variant is required'
+      });
+    }
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -50,11 +65,10 @@ exports.createProduct = async (req, res, next) => {
     const newProduct = Product.create({
       name,
       description,
-      price,
       category,
       brand,
-      stock,
-      images
+      images,
+      variants: parsedVariants
     });
 
     res.status(201).json({
@@ -69,19 +83,21 @@ exports.createProduct = async (req, res, next) => {
 // @route PUT /api/products/:id
 exports.updateProduct = async (req, res, next) => {
   try {
-
-    const { imagesToDelete } = req.body; // ['/uploads/123.jpg', '/uploads/456.jpg']
-    console.log(imagesToDelete);
+    const { imagesToDelete, variants } = req.body; // ['/uploads/123.jpg', '/uploads/456.jpg']
+    console.log('1', typeof imagesToDelete);
     let imagesToDeleteArr = [];
     
     if (imagesToDelete && typeof imagesToDelete === 'string') {
       try {
         const nestedArr = JSON.parse(`[${imagesToDelete}]`);
         imagesToDeleteArr = nestedArr.flat();
+        console.log('2', imagesToDeleteArr);
+
+        if (!Array.isArray(imagesToDeleteArr)) {
+          imagesToDeleteArr = [imagesToDeleteArr];
+        }
       } catch (e) {
-        return res.status(400).json({
-          message: e.message
-        });
+        imagesToDeleteArr = [imagesToDelete];
       }
     } else if (Array.isArray(imagesToDelete)) {
       imagesToDeleteArr = imagesToDelete;
@@ -113,6 +129,21 @@ exports.updateProduct = async (req, res, next) => {
     }
 
     req.body.images = currentImages;
+
+    if (variants) {
+      try {
+        const parsedVariants = JSON.parse(variants);
+        if (!Array.isArray(parsedVariants)) {
+          throw new Error('Variants must be an array');
+        }
+
+        req.body.variants = parsedVariants
+      } catch (e) {
+        return res.status(400).json({
+          message: 'Invalid variants JSON format'
+        })
+      }
+    }
 
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
